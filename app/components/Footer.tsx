@@ -27,11 +27,11 @@ export default function Footer() {
       <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-[#E50914] opacity-5"></div>
 
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
           {/* Logo and description */}
           <div className="md:col-span-5 flex flex-col items-center md:items-start">
             <div className="flex flex-col md:flex-row items-center md:items-center gap-0 mb-1">
-              <div className="relative w-[120px] h-[120px] rounded-full overflow-hidden shadow-lg">
+              <div className="relative w-[80px] h-[80px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden shadow-lg">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jack-png-0mdpDFdQco1iMsBVcne6vCHyophgZy.png"
                   alt="KeiijaK Logo"
@@ -43,13 +43,13 @@ export default function Footer() {
                   }}
                 />
               </div>
-              <span className="text-5xl font-bold md:ml-[-10px] bg-clip-text text-transparent bg-gradient-to-b from-[#E50914] via-[#C41220] to-[#8B0000]">
+              <span className="text-3xl md:text-5xl font-bold md:ml-[-10px] bg-clip-text text-transparent bg-gradient-to-b from-[#E50914] via-[#C41220] to-[#8B0000]">
                 KeiijaK
               </span>
             </div>
 
             {/* Iconos de redes sociales justo debajo del texto KeiijaK */}
-            <div className="flex space-x-4 mb-8 md:ml-[110px] -mt-1">
+            <div className="flex space-x-4 mb-6 md:mb-8 justify-center md:justify-start md:ml-[110px] -mt-1">
               <a
                 href="https://www.instagram.com/keiijak/"
                 target="_blank"
@@ -84,7 +84,7 @@ export default function Footer() {
           </div>
 
           {/* Enlaces Rápidos */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 text-center md:text-left">
             <h4 className="text-xl font-bold mb-6 relative inline-block">
               Enlaces Rápidos
               <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-[#E50914]"></span>
@@ -154,7 +154,7 @@ export default function Footer() {
           </div>
 
           {/* Contáctanos */}
-          <div className="md:col-span-4">
+          <div className="md:col-span-4 text-center md:text-left">
             <h4 className="text-xl font-bold mb-6 relative inline-block">
               Contáctanos
               <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-[#E50914]"></span>

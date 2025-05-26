@@ -72,7 +72,7 @@ export default function Testimonios() {
   return (
     <section id="testimonios" className="py-20 bg-[#B81D24] overflow-hidden">
       <div className="container mx-auto px-4">
-        <h2 className="text-7xl md:text-8xl font-extrabold text-center mb-16 text-[#F5F5F5] tracking-tight leading-tight">
+        <h2 className="text-4xl md:text-7xl lg:text-8xl font-extrabold text-center mb-12 md:mb-16 text-[#F5F5F5] tracking-tight leading-tight px-4">
           Lo que Dicen Nuestros Clientes
         </h2>
 
@@ -98,7 +98,7 @@ export default function Testimonios() {
               }`}
             >
               {/* Photo */}
-              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-xl mb-8 md:mb-0 md:mr-12 flex-shrink-0 relative z-10">
+              <div className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-white shadow-xl mb-6 md:mb-8 lg:mb-0 md:mr-12 flex-shrink-0 relative z-10">
                 {testimonio.nombre === "Anette Espinet" ? (
                   <div className="absolute inset-0 bg-[#FFD700] flex items-center justify-center">
                     {/* Custom positioning for Anette's photo */}
@@ -159,18 +159,18 @@ export default function Testimonios() {
               </div>
 
               {/* Quote */}
-              <div className="max-w-2xl bg-white rounded-lg p-8 shadow-xl relative z-10">
+              <div className="max-w-2xl bg-white rounded-lg p-6 md:p-8 shadow-xl relative z-10 mx-4 md:mx-0">
                 <svg className="absolute -top-6 left-10 w-12 h-12 text-white" fill="currentColor" viewBox="0 0 32 32">
                   <path d="M10,8V0H0v12c0,6.627,5.373,12,12,12V16H10V8z M30,8V0H20v12c0,6.627,5.373,12,12,12V16H30V8z" />
                 </svg>
 
-                <p className="text-xl italic text-[#1A1A1A] mb-6">"{testimonio.cita}"</p>
+                <p className="text-lg md:text-xl italic text-[#1A1A1A] mb-4 md:mb-6">"{testimonio.cita}"</p>
 
                 <div className="flex items-center">
                   <div className="w-2 h-12 mr-4 rounded-full" style={{ backgroundColor: testimonio.bgColor }}></div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#E50914]">{testimonio.nombre}</h3>
-                    <p className="text-[#1A1A1A]">{testimonio.empresa}</p>
+                    <h3 className="text-lg md:text-xl font-bold text-[#E50914]">{testimonio.nombre}</h3>
+                    <p className="text-sm md:text-base text-[#1A1A1A]">{testimonio.empresa}</p>
                   </div>
                 </div>
               </div>

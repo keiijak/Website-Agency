@@ -66,7 +66,7 @@ export default function Header() {
     <header className="bg-[#1A1A1A] shadow-md relative z-50">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <Link href="/" className="flex items-center relative">
-          <div className="relative w-[140px] h-[140px] rounded-full overflow-hidden">
+          <div className="relative w-[100px] h-[100px] md:w-[140px] md:h-[140px] rounded-full overflow-hidden">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-jack-png-0mdpDFdQco1iMsBVcne6vCHyophgZy.png"
               alt="KeiijaK Logo"
@@ -78,7 +78,7 @@ export default function Header() {
               }}
             />
           </div>
-          <span className="text-5xl font-bold ml-[-15px] bg-clip-text text-transparent bg-gradient-to-b from-[#E50914] via-[#C41220] to-[#8B0000]">
+          <span className="text-3xl md:text-5xl font-bold ml-[-10px] md:ml-[-15px] bg-clip-text text-transparent bg-gradient-to-b from-[#E50914] via-[#C41220] to-[#8B0000]">
             KeiijaK
           </span>
         </Link>
@@ -90,9 +90,11 @@ export default function Header() {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
           <div className="relative">
-            <Menu className={`w-12 h-12 transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`} />
+            <Menu
+              className={`w-10 h-10 md:w-12 md:h-12 transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+            />
             <X
-              className={`w-12 h-12 absolute top-0 left-0 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
+              className={`w-10 h-10 md:w-12 md:h-12 absolute top-0 left-0 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
             />
           </div>
         </button>

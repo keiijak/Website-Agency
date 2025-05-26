@@ -121,3 +121,54 @@ body {
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+/* Mejoras para móviles */
+@media (max-width: 768px) {
+  /* Asegurar que el texto no sea demasiado pequeño */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Mejorar el espaciado en móviles */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Asegurar que los botones sean fáciles de tocar */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mejorar el scroll en móviles */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ocultar scrollbars en móviles para mejor UX */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Mejorar la legibilidad en pantallas pequeñas */
+@media (max-width: 480px) {
+  h1,
+  h2,
+  h3 {
+    line-height: 1.2;
+  }
+
+  /* Asegurar que las imágenes no se desborden */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}

@@ -108,12 +108,12 @@ export default function Servicios() {
     <>
       <section id="servicios" ref={sectionRef} className="py-20 bg-[#1A1A1A] overflow-hidden">
         <div className="container mx-auto px-4">
-          <h2 className="text-7xl md:text-8xl font-extrabold text-center mb-20 text-[#F5F5F5] tracking-tight leading-tight">
+          <h2 className="text-4xl md:text-7xl lg:text-8xl font-extrabold text-center mb-12 md:mb-20 text-[#F5F5F5] tracking-tight leading-tight px-4">
             Servicio de Marca Personal
           </h2>
 
           {/* Service Navigation */}
-          <div className="flex justify-center mb-16 space-x-8">
+          <div className="flex justify-center mb-12 md:mb-16 space-x-4 md:space-x-8 px-4">
             {servicios.map((servicio, index) => (
               <button
                 key={index}
@@ -124,7 +124,7 @@ export default function Servicios() {
               >
                 {/* Número encima del botón */}
                 <div
-                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold"
+                  className="absolute -top-8 md:-top-10 left-1/2 transform -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-lg md:text-xl font-bold"
                   style={{
                     backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
                     color: "#F5F5F5",
@@ -135,7 +135,7 @@ export default function Servicios() {
                 </div>
 
                 <div
-                  className={`px-10 py-5 rounded-full transition-all duration-300 transform ${
+                  className={`px-6 py-3 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-base md:text-xl font-bold ${
                     activeService === index || hoveredButton === index
                       ? "scale-110 shadow-xl"
                       : "shadow-md hover:shadow-lg"
@@ -186,11 +186,14 @@ export default function Servicios() {
                           )}
                         </div>
 
-                        <h3 className="text-6xl font-bold mb-6 leading-tight" style={{ color: servicio.textColor }}>
+                        <h3
+                          className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight"
+                          style={{ color: servicio.textColor }}
+                        >
                           {servicio.titulo}
                         </h3>
 
-                        <p className="text-xl mb-8" style={{ color: servicio.textColor }}>
+                        <p className="text-lg md:text-xl mb-6 md:mb-8" style={{ color: servicio.textColor }}>
                           {servicio.descripcion}
                         </p>
 
@@ -228,11 +231,14 @@ export default function Servicios() {
                           <TrendingUp className="w-10 h-10 text-white" />
                         </div>
 
-                        <h3 className="text-6xl font-bold mb-6 leading-tight" style={{ color: servicio.textColor }}>
+                        <h3
+                          className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight"
+                          style={{ color: servicio.textColor }}
+                        >
                           {servicio.titulo}
                         </h3>
 
-                        <p className="text-xl mb-8" style={{ color: servicio.textColor }}>
+                        <p className="text-lg md:text-xl mb-6 md:mb-8" style={{ color: servicio.textColor }}>
                           {servicio.descripcion}
                         </p>
 

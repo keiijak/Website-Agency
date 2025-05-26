@@ -112,16 +112,16 @@ export default function Hero() {
 
         {/* Hero Content */}
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className="text-7xl md:text-9xl font-extrabold mb-10 text-[#F5F5F5] drop-shadow-lg leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-extrabold mb-6 md:mb-10 text-[#F5F5F5] drop-shadow-lg leading-tight tracking-tight">
             Crea Contenido que Vende
           </h1>
-          <p className="text-xl md:text-2xl mb-10 text-[#F5F5F5] max-w-3xl mx-auto drop-shadow-md">
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-10 text-[#F5F5F5] max-w-3xl mx-auto drop-shadow-md px-4">
             Ayudamos a desarollar tu marca personal a través de la creación contenido, generando prospectos potenciales
             para tu negocio.
           </p>
           <button
             onClick={handleComienzaAhora}
-            className="bg-[#E50914] text-[#F5F5F5] px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#B81D24] inline-block transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-[#E50914] text-[#F5F5F5] px-6 py-3 md:px-8 md:py-4 rounded-full text-base md:text-lg font-semibold hover:bg-[#B81D24] inline-block transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Comienza Ahora
           </button>
