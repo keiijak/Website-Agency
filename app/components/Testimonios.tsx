@@ -10,7 +10,7 @@ export default function Testimonios() {
     {
       nombre: "Kevin Rodriguez",
       empresa: "Planificador Financiero",
-      cita: "El contenido creado por KeiijaK ha transformado nuestra estrategia digital. Nuestro engagement ha aumentado un 200% en solo tres meses.",
+      cita: "Desde que comencé a trabajar con KeiijaK he visto un aumento significativo en las estadísticas de mis redes sociales. Incluso he podido recopilar muchos clientes para mi negocio a través del contenido",
       foto: "/images/kevin-rodriguez.jpeg",
       objectPosition: "center top",
       bgColor: "#E50914",
