@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 
 const elementosPortafolio = [
@@ -33,106 +33,59 @@ const elementosPortafolio = [
 
 export default function Portafolio() {
   const [playingVideo, setPlayingVideo] = useState<number | null>(null)
-  const [mutedStates, setMutedStates] = useState<boolean[]>([])
-  const [errors, setErrors] = useState<(string | null)[]>([])
-  const [progress, setProgress] = useState<number[]>([])
-  const [videosLoaded, setVideosLoaded] = useState<boolean[]>([])
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const progressBarRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [mutedStates, setMutedStates] = useState<boolean[]>(elementosPortafolio.map(() => true))
+  const [progress, setProgress] = useState<number[]>(elementosPortafolio.map(() => 0))
+  const [videoErrors, setVideoErrors] = useState<boolean[]>(elementosPortafolio.map(() => false))
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>(elementosPortafolio.map(() => null))
 
-  useEffect(() => {
-    setMutedStates(elementosPortafolio.map(() => true))
-    setErrors(elementosPortafolio.map(() => null))
-    setProgress(elementosPortafolio.map(() => 0))
-    setVideosLoaded(elementosPortafolio.map(() => false))
-  }, [])
-
-  const handleError = useCallback((index: number, error: unknown) => {
-    console.error(`Error in video ${index}:`, error)
-    let errorMessage = "Video no disponible"
-    if (error instanceof Error) {
-      errorMessage = `Error: ${error.message}`
-    } else if (error instanceof Event && error.type === "error") {
-      const target = error.target as HTMLVideoElement
-      errorMessage = `Error: ${target.error?.message || "Error de video"}`
-    }
-    setErrors((prev) => {
+  const handleVideoError = useCallback((index: number) => {
+    console.log(`Video ${index} failed to load, showing placeholder`)
+    setVideoErrors((prev) => {
       const newErrors = [...prev]
-      newErrors[index] = errorMessage
+      newErrors[index] = true
       return newErrors
-    })
-  }, [])
-
-  const handleVideoLoaded = useCallback((index: number) => {
-    console.log(`Video ${index} loaded successfully`)
-    setVideosLoaded((prev) => {
-      const newLoaded = [...prev]
-      newLoaded[index] = true
-      return newLoaded
     })
   }, [])
 
   const togglePlay = useCallback(
     async (index: number) => {
-      console.log(`Attempting to toggle play for video ${index}`)
-      try {
-        const video = videoRefs.current[index]
-        if (!video) {
-          console.error(`Video ${index} ref is null`)
-          return
-        }
+      const video = videoRefs.current[index]
+      if (!video) return
 
+      try {
         if (playingVideo === index) {
-          console.log(`Pausing video ${index}`)
           video.pause()
           setPlayingVideo(null)
         } else {
-          console.log(`Playing video ${index}`)
-          // Pause any other playing video first
-          if (playingVideo !== null) {
-            const currentlyPlaying = videoRefs.current[playingVideo]
-            if (currentlyPlaying) {
-              currentlyPlaying.pause()
-            }
+          // Pause other videos
+          if (playingVideo !== null && videoRefs.current[playingVideo]) {
+            videoRefs.current[playingVideo]?.pause()
           }
-
-          try {
-            await video.play()
-            setPlayingVideo(index)
-            console.log(`Video ${index} started playing successfully`)
-          } catch (playError) {
-            console.error(`Error playing video ${index}:`, playError)
-            handleError(index, playError)
-          }
+          await video.play()
+          setPlayingVideo(index)
         }
       } catch (error) {
-        console.error(`Error in togglePlay for video ${index}:`, error)
-        handleError(index, error)
+        console.error(`Error playing video ${index}:`, error)
+        handleVideoError(index)
       }
     },
-    [playingVideo, handleError],
+    [playingVideo, handleVideoError],
   )
 
   const toggleMute = useCallback(
     (index: number) => {
-      try {
-        const video = videoRefs.current[index]
-        if (video) {
-          const newMutedState = !mutedStates[index]
-          video.muted = newMutedState
-          setMutedStates((prev) => {
-            const newStates = [...prev]
-            newStates[index] = newMutedState
-            return newStates
-          })
-          console.log(`Video ${index} muted state changed to: ${newMutedState}`)
-        }
-      } catch (error) {
-        console.error(`Error toggling mute for video ${index}:`, error)
-        handleError(index, error)
+      const video = videoRefs.current[index]
+      if (video) {
+        const newMutedState = !mutedStates[index]
+        video.muted = newMutedState
+        setMutedStates((prev) => {
+          const newStates = [...prev]
+          newStates[index] = newMutedState
+          return newStates
+        })
       }
     },
-    [mutedStates, handleError],
+    [mutedStates],
   )
 
   const updateProgress = useCallback((index: number) => {
@@ -149,9 +102,9 @@ export default function Portafolio() {
 
   const handleProgressBarClick = useCallback(
     (index: number, event: React.MouseEvent<HTMLDivElement>) => {
-      const progressBar = progressBarRefs.current[index]
       const video = videoRefs.current[index]
-      if (progressBar && video && video.duration) {
+      const progressBar = event.currentTarget
+      if (video && video.duration && progressBar) {
         const rect = progressBar.getBoundingClientRect()
         const clickPosition = (event.clientX - rect.left) / rect.width
         video.currentTime = clickPosition * video.duration
@@ -161,17 +114,6 @@ export default function Portafolio() {
     [updateProgress],
   )
 
-  // Handle video end
-  const handleVideoEnd = useCallback((index: number) => {
-    console.log(`Video ${index} ended`)
-    setPlayingVideo(null)
-    setProgress((prev) => {
-      const newProgress = [...prev]
-      newProgress[index] = 0
-      return newProgress
-    })
-  }, [])
-
   return (
     <section id="portafolio" className="py-20 bg-[#1A1A1A]">
       <div className="container mx-auto px-4">
@@ -179,117 +121,114 @@ export default function Portafolio() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4">
           {elementosPortafolio.map((elemento, index) => (
             <div key={index} className="bg-black rounded-lg overflow-hidden shadow-md">
-              <div className="aspect-[9/16] relative">
-                {errors[index] ? (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#E50914] to-[#B81D24] flex flex-col items-center justify-center p-4">
+              <div className="aspect-[9/16] relative group">
+                {videoErrors[index] ? (
+                  // Fallback cuando el video falla
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#E50914] to-[#B81D24] flex flex-col items-center justify-center p-6">
                     <div className="text-center">
                       <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto">
-                        <Play className="w-8 h-8 text-[#E50914]" />
+                        <Play className="w-8 h-8 text-[#E50914] ml-1" />
                       </div>
-                      <h3 className="text-white font-bold text-lg mb-2">{elemento.titulo}</h3>
-                      <p className="text-white text-sm opacity-80">{errors[index]}</p>
+                      <h3 className="text-white font-bold text-xl mb-2">{elemento.titulo}</h3>
+                      <p className="text-white text-sm opacity-80 mb-2">{elemento.vistas} visualizaciones</p>
+                      <p className="text-white text-xs opacity-60">Video de muestra</p>
                     </div>
                   </div>
                 ) : (
                   <>
-                    {/* Loading indicator */}
-                    {!videosLoaded[index] && (
-                      <div className="absolute inset-0 bg-[#1A1A1A] flex items-center justify-center z-10">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E50914]"></div>
-                      </div>
-                    )}
-
+                    {/* Video Element */}
                     <video
                       ref={(el) => (videoRefs.current[index] = el)}
-                      src={elemento.video}
                       className="absolute inset-0 w-full h-full object-cover"
                       loop
-                      playsInline
                       muted={mutedStates[index]}
+                      playsInline
                       preload="metadata"
-                      onError={(e) => {
-                        console.error(`Video ${index} error event:`, e)
-                        handleError(index, e)
-                      }}
+                      onError={() => handleVideoError(index)}
                       onTimeUpdate={() => updateProgress(index)}
-                      onLoadedData={() => {
-                        console.log(`Video ${index} loaded data`)
-                        handleVideoLoaded(index)
-                      }}
-                      onCanPlay={() => {
-                        console.log(`Video ${index} can play`)
-                        handleVideoLoaded(index)
-                      }}
-                      onEnded={() => handleVideoEnd(index)}
-                      onPlay={() => {
-                        console.log(`Video ${index} play event`)
-                        setPlayingVideo(index)
-                      }}
+                      onPlay={() => setPlayingVideo(index)}
                       onPause={() => {
-                        console.log(`Video ${index} pause event`)
                         if (playingVideo === index) {
                           setPlayingVideo(null)
                         }
                       }}
-                      style={{
-                        opacity: videosLoaded[index] ? 1 : 0,
-                        transition: "opacity 0.3s ease",
+                      onEnded={() => {
+                        setPlayingVideo(null)
+                        setProgress((prev) => {
+                          const newProgress = [...prev]
+                          newProgress[index] = 0
+                          return newProgress
+                        })
                       }}
                     >
-                      Your browser does not support the video tag.
+                      <source src={elemento.video} type="video/mp4" />
+                      {/* Fallback para navegadores que no soportan video */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#E50914] to-[#B81D24] flex flex-col items-center justify-center p-6">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto">
+                            <Play className="w-8 h-8 text-[#E50914] ml-1" />
+                          </div>
+                          <h3 className="text-white font-bold text-xl mb-2">{elemento.titulo}</h3>
+                          <p className="text-white text-sm opacity-80">{elemento.vistas} visualizaciones</p>
+                        </div>
+                      </div>
                     </video>
 
-                    {/* Progress bar */}
+                    {/* Play/Pause Overlay - Solo se muestra cuando el video está cargado */}
                     <div
-                      ref={(el) => (progressBarRefs.current[index] = el)}
-                      className="absolute bottom-0 left-0 w-full h-2 bg-[#F5F5F5] cursor-pointer group"
+                      className={`absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-opacity duration-300 ${
+                        playingVideo === index ? "opacity-0" : "opacity-100 group-hover:opacity-100"
+                      }`}
+                    >
+                      <button
+                        onClick={() => togglePlay(index)}
+                        className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform hover:scale-110 shadow-lg"
+                        aria-label={playingVideo === index ? "Pausar video" : "Reproducir video"}
+                      >
+                        {playingVideo === index ? (
+                          <Pause className="w-8 h-8 text-[#E50914]" />
+                        ) : (
+                          <Play className="w-8 h-8 text-[#E50914] ml-1" />
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Progress Bar - Solo se muestra cuando el video está cargado */}
+                    <div
+                      className="absolute bottom-0 left-0 w-full h-2 bg-black bg-opacity-50 cursor-pointer"
                       onClick={(e) => handleProgressBarClick(index, e)}
                     >
-                      <div className="relative h-full bg-[#B81D24]" style={{ width: `${progress[index]}%` }}>
-                        <div
-                          className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md border-2 border-[#B81D24]"
-                          style={{
-                            opacity: playingVideo === index ? 1 : 0,
-                            transition: "opacity 0.3s ease",
-                          }}
-                        ></div>
+                      <div
+                        className="h-full bg-[#E50914] transition-all duration-150 relative"
+                        style={{ width: `${progress[index]}%` }}
+                      >
+                        {/* Círculo en el extremo de la barra de progreso */}
+                        <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md border-2 border-[#E50914]"></div>
                       </div>
                     </div>
 
-                    {/* Controls */}
-                    <div className="absolute bottom-4 right-2 flex space-x-1 md:space-x-2">
+                    {/* Controls - Solo se muestran cuando el video está cargado */}
+                    <div className="absolute bottom-4 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <button
-                        className="p-1.5 md:p-2 bg-black bg-opacity-50 rounded-full transition-opacity duration-300 hover:bg-opacity-70"
+                        className="p-2 bg-black bg-opacity-70 rounded-full hover:bg-opacity-90 transition-all duration-300"
                         onClick={(e) => {
                           e.stopPropagation()
                           toggleMute(index)
                         }}
-                        aria-label={mutedStates[index] ? "Unmute" : "Mute"}
+                        aria-label={mutedStates[index] ? "Activar sonido" : "Silenciar"}
                       >
                         {mutedStates[index] ? (
-                          <VolumeX className="w-5 h-5 md:w-6 md:h-6 text-[#F5F5F5]" />
+                          <VolumeX className="w-5 h-5 text-white" />
                         ) : (
-                          <Volume2 className="w-5 h-5 md:w-6 md:h-6 text-[#F5F5F5]" />
-                        )}
-                      </button>
-                      <button
-                        className="p-1.5 md:p-2 bg-black bg-opacity-50 rounded-full transition-opacity duration-300 hover:bg-opacity-70"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          togglePlay(index)
-                        }}
-                        aria-label={playingVideo === index ? "Pause" : "Play"}
-                      >
-                        {playingVideo === index ? (
-                          <Pause className="w-5 h-5 md:w-6 md:h-6 text-[#F5F5F5]" />
-                        ) : (
-                          <Play className="w-5 h-5 md:w-6 md:h-6 text-[#F5F5F5]" />
+                          <Volume2 className="w-5 h-5 text-white" />
                         )}
                       </button>
                     </div>
                   </>
                 )}
               </div>
+
+              {/* Video Info */}
               <div className="p-4 flex justify-between items-center bg-[#E50914]">
                 <p className="text-2xl font-bold text-[#F5F5F5]">{elemento.vistas}</p>
                 <p className="text-sm text-[#F5F5F5]">visualizaciones</p>
