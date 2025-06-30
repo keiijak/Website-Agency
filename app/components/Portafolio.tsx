@@ -140,7 +140,6 @@ export default function Portafolio() {
                     <video
                       ref={(el) => (videoRefs.current[index] = el)}
                       className="absolute inset-0 w-full h-full object-cover"
-                      poster="/placeholder.svg?height=600&width=400&text=Video"
                       loop
                       muted={mutedStates[index]}
                       playsInline
