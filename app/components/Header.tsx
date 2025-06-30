@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -14,7 +16,8 @@ export default function Header() {
   }
 
   // Función mejorada para el desplazamiento a secciones
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation() // Detener la propagación del evento para evitar que el overlay se cierre inmediatamente
     console.log(`[scrollToSection] Intentando desplazarse a la sección: #${sectionId}`)
     setIsMenuOpen(false) // Cerrar el menú inmediatamente
 
@@ -44,7 +47,7 @@ export default function Header() {
       } catch (error) {
         console.error("[scrollToSection] Error al desplazarse:", error)
       }
-    }, 300) // Aumentado a 300ms para dar más tiempo al cierre del menú
+    }, 300) // Mantenemos 300ms para dar tiempo a la animación de cierre del menú
   }
 
   // Registrar todos los IDs disponibles en la página para depuración
@@ -133,7 +136,7 @@ export default function Header() {
             <ul className="space-y-8">
               <li className="overflow-hidden">
                 <button
-                  onClick={() => scrollToSection("servicios")}
+                  onClick={(e) => scrollToSection("servicios", e)}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -147,7 +150,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={() => scrollToSection("resultados")}
+                  onClick={(e) => scrollToSection("resultados", e)}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -161,7 +164,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={() => scrollToSection("testimonios")}
+                  onClick={(e) => scrollToSection("testimonios", e)}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -175,7 +178,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={() => scrollToSection("portafolio")}
+                  onClick={(e) => scrollToSection("portafolio", e)}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -189,7 +192,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={() => scrollToSection("clientes")}
+                  onClick={(e) => scrollToSection("clientes", e)}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -203,7 +206,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden mt-12">
                 <button
-                  onClick={() => scrollToSection("reservar-llamada")}
+                  onClick={(e) => scrollToSection("reservar-llamada", e)}
                   className={`bg-[#E50914] text-[#F5F5F5] px-8 py-4 rounded-full hover:bg-[#B81D24] text-xl font-bold w-full text-center transition-all duration-500 transform hover:scale-105 shadow-lg ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
