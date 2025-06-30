@@ -1,9 +1,9 @@
 export default function Resultados() {
   const estadisticas = [
-    { etiqueta: "Visualizaciones en Plataformas", valor: "15M+" },
-    { etiqueta: "Seguidores Generados", valor: "50K+" },
-    { etiqueta: "Clientes Atendidos", valor: "100+" },
-    { etiqueta: "Piezas de Contenido Creadas", valor: "2,000+" },
+    { etiqueta: "Visualizaciones en Plataformas", valor: "15M" },
+    { etiqueta: "Seguidores Generados", valor: "50K" },
+    { etiqueta: "Clientes Atendidos", valor: "100" },
+    { etiqueta: "Piezas de Contenido Creadas", valor: "2,000" },
   ]
 
   return (
@@ -19,7 +19,7 @@ export default function Resultados() {
               className="bg-[#E50914] p-6 rounded-lg shadow-lg text-center transform transition-transform hover:scale-105 duration-300 group cursor-pointer"
             >
               <div className="text-4xl md:text-5xl font-bold mb-2 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-110 relative">
-                <span className="relative inline-block animate-float">{estadistica.valor}</span>
+                <span className="relative inline-block animate-float">+{estadistica.valor.replace("+", "")}</span>
               </div>
               <div className="text-base md:text-lg font-medium text-[#F0F0F0] transition-all duration-300 group-hover:text-white text-center">
                 {estadistica.etiqueta}
