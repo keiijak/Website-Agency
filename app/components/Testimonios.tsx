@@ -5,6 +5,18 @@ import Image from "next/image"
 
 export default function Testimonios() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const testimonios = [
     {
@@ -101,8 +113,8 @@ export default function Testimonios() {
               <div className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-white shadow-xl mb-6 md:mb-8 lg:mb-0 md:mr-12 flex-shrink-0 relative z-10">
                 {testimonio.nombre === "Anette Espinet" ? (
                   <div className="absolute inset-0 bg-[#FFD700] flex items-center justify-center">
-                    {/* Custom positioning for Anette's photo */}
-                    <div className="absolute w-full h-full" style={{ top: "-50px" }}>
+                    {/* Custom positioning for Anette's photo with mobile optimization */}
+                    <div className="absolute w-full h-full" style={{ top: isMobile ? "-20px" : "-50px" }}>
                       <Image
                         src={testimonio.foto || "/placeholder.svg"}
                         alt={`Foto de ${testimonio.nombre}`}
@@ -113,11 +125,11 @@ export default function Testimonios() {
                           position: "absolute",
                           top: "50%",
                           left: "50%",
-                          transform: "translate(-50%, -30%)",
+                          transform: isMobile ? "translate(-50%, -20%) scale(0.9)" : "translate(-50%, -30%)",
                           maxWidth: "none",
                           width: "auto",
                           height: "auto",
-                          maxHeight: "110%",
+                          maxHeight: isMobile ? "100%" : "110%",
                         }}
                         onError={(e) => {
                           ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=256&width=256"
