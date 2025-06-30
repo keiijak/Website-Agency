@@ -119,13 +119,25 @@ export default function Portafolio() {
   }, [])
 
   const handleProgressBarClick = useCallback(
-    (index: number, event: React.MouseEvent<HTMLDivElement>) => {
+    (index: number, event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
       const video = videoRefs.current[index]
       const progressBar = event.currentTarget
       if (video && video.duration && progressBar) {
         const rect = progressBar.getBoundingClientRect()
-        const clickPosition = (event.clientX - rect.left) / rect.width
-        video.currentTime = clickPosition * video.duration
+
+        // Detectar si es un evento táctil o de mouse
+        let clientX: number
+        if ("touches" in event && event.touches.length > 0) {
+          clientX = event.touches[0].clientX
+        } else if ("changedTouches" in event && event.changedTouches.length > 0) {
+          clientX = event.changedTouches[0].clientX
+        } else {
+          clientX = (event as React.MouseEvent).clientX
+        }
+
+        const clickPosition = (clientX - rect.left) / rect.width
+        const newTime = Math.max(0, Math.min(clickPosition * video.duration, video.duration))
+        video.currentTime = newTime
         updateProgress(index)
       }
     },
@@ -215,8 +227,12 @@ export default function Portafolio() {
 
                     {/* Progress Bar */}
                     <div
-                      className="absolute bottom-0 left-0 w-full h-2 bg-black bg-opacity-50 cursor-pointer"
+                      className="absolute bottom-0 left-0 w-full h-4 bg-black bg-opacity-50 cursor-pointer touch-manipulation"
                       onClick={(e) => handleProgressBarClick(index, e)}
+                      onTouchEnd={(e) => {
+                        e.preventDefault()
+                        handleProgressBarClick(index, e)
+                      }}
                     >
                       <div
                         className="h-full bg-[#E50914] transition-all duration-150 relative"
