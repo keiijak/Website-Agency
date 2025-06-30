@@ -114,7 +114,7 @@ export default function Testimonios() {
                 {testimonio.nombre === "Anette Espinet" ? (
                   <div className="absolute inset-0 bg-[#FFD700] flex items-center justify-center">
                     {/* Custom positioning for Anette's photo with mobile optimization */}
-                    <div className="absolute w-full h-full" style={{ top: isMobile ? "20px" : "-50px" }}>
+                    <div className="absolute w-full h-full" style={{ top: isMobile ? "-10px" : "-50px" }}>
                       <Image
                         src={testimonio.foto || "/placeholder.svg"}
                         alt={`Foto de ${testimonio.nombre}`}
@@ -125,7 +125,7 @@ export default function Testimonios() {
                           position: "absolute",
                           top: "50%",
                           left: "50%",
-                          transform: isMobile ? "translate(-50%, -80%) scale(0.9)" : "translate(-50%, -30%)",
+                          transform: isMobile ? "translate(-50%, -40%) scale(0.9)" : "translate(-50%, -30%)",
                           maxWidth: "none",
                           width: "auto",
                           height: "auto",
