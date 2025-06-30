@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { FileText, Video, TrendingUp, ArrowRight, Check } from "lucide-react"
+import { FileText, Video, TrendingUp, ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react"
 import FormModal from "./FormModal"
 import ImageCollage from "./ImageCollage"
 
@@ -12,6 +12,18 @@ export default function Servicios() {
   const servicesRef = useRef<HTMLDivElement>(null)
   const [showModal, setShowModal] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   // Handle scroll snap on mobile
   useEffect(() => {
@@ -104,30 +116,14 @@ export default function Servicios() {
     }
   }
 
-  // Función para renderizar el título con animación palabra por palabra
-  const renderAnimatedTitle = (titulo: string, isActive: boolean) => {
-    const palabras = titulo.split(" ")
+  const nextService = () => {
+    const nextIndex = (activeService + 1) % servicios.length
+    scrollToService(nextIndex)
+  }
 
-    return (
-      <h3
-        className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
-        style={{ color: "#F5F5F5" }}
-      >
-        {palabras.map((palabra, index) => (
-          <span
-            key={index}
-            className={`inline-block mr-2 transition-all duration-500 ${
-              isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-            style={{
-              transitionDelay: isActive ? `${index * 200}ms` : "0ms",
-            }}
-          >
-            {palabra}
-          </span>
-        ))}
-      </h3>
-    )
+  const prevService = () => {
+    const prevIndex = activeService === 0 ? servicios.length - 1 : activeService - 1
+    scrollToService(prevIndex)
   }
 
   return (
@@ -138,53 +134,91 @@ export default function Servicios() {
             Servicio de Marca Personal
           </h2>
 
-          {/* Service Navigation */}
-          <div className="flex justify-center mb-12 md:mb-16 px-4">
-            <div className="flex space-x-2 md:space-x-8 overflow-x-auto scrollbar-hide max-w-full">
-              {servicios.map((servicio, index) => (
-                <button
-                  key={index}
-                  onClick={() => scrollToService(index)}
-                  onMouseEnter={() => setHoveredButton(index)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                  className="relative group flex-shrink-0"
-                >
-                  {/* Número encima del botón */}
-                  <div
-                    className="absolute -top-6 md:-top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm md:text-xl font-bold"
-                    style={{
-                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
-                      color: "#F5F5F5",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    {index + 1}
-                  </div>
+          {/* Mobile Service Title Navigation */}
+          {isMobile && (
+            <div className="flex items-center justify-center mb-8 px-4">
+              <button
+                onClick={prevService}
+                className="p-2 text-white hover:text-[#E50914] transition-colors duration-300"
+                aria-label="Servicio anterior"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
 
-                  <div
-                    className={`px-3 py-2 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-sm md:text-xl font-bold whitespace-nowrap ${
-                      activeService === index || hoveredButton === index
-                        ? "scale-105 md:scale-110 shadow-xl"
-                        : "shadow-md hover:shadow-lg"
-                    }`}
-                    style={{
-                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
-                      color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
-                      minWidth: "fit-content",
-                    }}
-                  >
-                    <span className="font-bold">{servicio.titulo}</span>
-                  </div>
-                  {activeService === index && (
+              <div className="flex-1 text-center mx-4">
+                <h3 className="text-2xl font-bold text-white">{servicios[activeService].titulo}</h3>
+                <div className="flex justify-center mt-2 space-x-2">
+                  {servicios.map((_, index) => (
                     <div
-                      className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 rotate-45"
-                      style={{ backgroundColor: servicio.color }}
-                    ></div>
-                  )}
-                </button>
-              ))}
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        activeService === index ? "bg-[#E50914] w-6" : "bg-gray-500"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={nextService}
+                className="p-2 text-white hover:text-[#E50914] transition-colors duration-300"
+                aria-label="Siguiente servicio"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
             </div>
-          </div>
+          )}
+
+          {/* Desktop Service Navigation */}
+          {!isMobile && (
+            <div className="flex justify-center mb-12 md:mb-16 px-4">
+              <div className="flex space-x-2 md:space-x-8 overflow-x-auto scrollbar-hide max-w-full">
+                {servicios.map((servicio, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollToService(index)}
+                    onMouseEnter={() => setHoveredButton(index)}
+                    onMouseLeave={() => setHoveredButton(null)}
+                    className="relative group flex-shrink-0"
+                  >
+                    {/* Número encima del botón */}
+                    <div
+                      className="absolute -top-6 md:-top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm md:text-xl font-bold"
+                      style={{
+                        backgroundColor:
+                          activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
+                        color: "#F5F5F5",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div
+                      className={`px-3 py-2 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-sm md:text-xl font-bold whitespace-nowrap ${
+                        activeService === index || hoveredButton === index
+                          ? "scale-105 md:scale-110 shadow-xl"
+                          : "shadow-md hover:shadow-lg"
+                      }`}
+                      style={{
+                        backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
+                        color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
+                        minWidth: "fit-content",
+                      }}
+                    >
+                      <span className="font-bold">{servicio.titulo}</span>
+                    </div>
+                    {activeService === index && (
+                      <div
+                        className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 rotate-45"
+                        style={{ backgroundColor: servicio.color }}
+                      ></div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Services Horizontal Scroll */}
           <div
@@ -214,43 +248,33 @@ export default function Servicios() {
                           )}
                         </div>
 
-                        {renderAnimatedTitle(servicio.titulo, activeService === index)}
+                        {/* Solo mostrar título en desktop */}
+                        {!isMobile && (
+                          <h3
+                            className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
+                            style={{ color: servicio.textColor }}
+                          >
+                            {servicio.titulo}
+                          </h3>
+                        )}
 
                         <p
-                          className={`text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed transition-all duration-700 ${
-                            activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                          }`}
-                          style={{
-                            color: servicio.textColor,
-                            transitionDelay: activeService === index ? "600ms" : "0ms",
-                          }}
+                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
+                          style={{ color: servicio.textColor }}
                         >
                           {servicio.descripcion}
                         </p>
 
                         <div className="mb-6 md:mb-8">
                           <h4
-                            className={`text-base md:text-lg font-semibold mb-3 md:mb-4 transition-all duration-500 ${
-                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                            }`}
-                            style={{
-                              color: servicio.textColor,
-                              transitionDelay: activeService === index ? "800ms" : "0ms",
-                            }}
+                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
+                            style={{ color: servicio.textColor }}
                           >
                             Beneficios:
                           </h4>
                           <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li
-                                key={i}
-                                className={`flex items-start transition-all duration-500 ${
-                                  activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                                }`}
-                                style={{
-                                  transitionDelay: activeService === index ? `${1000 + i * 100}ms` : "0ms",
-                                }}
-                              >
+                              <li key={i} className="flex items-start">
                                 <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                                   <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
@@ -268,13 +292,8 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className={`flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 ${
-                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                            }`}
-                            style={{
-                              color: servicio.color,
-                              transitionDelay: activeService === index ? "1400ms" : "0ms",
-                            }}
+                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            style={{ color: servicio.color }}
                           >
                             <span>Conoce más</span>
                             <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
@@ -288,43 +307,33 @@ export default function Servicios() {
                           <TrendingUp className="w-8 h-8 md:w-10 md:h-10 text-white" />
                         </div>
 
-                        {renderAnimatedTitle(servicio.titulo, activeService === index)}
+                        {/* Solo mostrar título en desktop */}
+                        {!isMobile && (
+                          <h3
+                            className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
+                            style={{ color: servicio.textColor }}
+                          >
+                            {servicio.titulo}
+                          </h3>
+                        )}
 
                         <p
-                          className={`text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed transition-all duration-700 ${
-                            activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                          }`}
-                          style={{
-                            color: servicio.textColor,
-                            transitionDelay: activeService === index ? "600ms" : "0ms",
-                          }}
+                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
+                          style={{ color: servicio.textColor }}
                         >
                           {servicio.descripcion}
                         </p>
 
                         <div className="mb-6 md:mb-8">
                           <h4
-                            className={`text-base md:text-lg font-semibold mb-3 md:mb-4 transition-all duration-500 ${
-                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                            }`}
-                            style={{
-                              color: servicio.textColor,
-                              transitionDelay: activeService === index ? "800ms" : "0ms",
-                            }}
+                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
+                            style={{ color: servicio.textColor }}
                           >
                             Beneficios:
                           </h4>
                           <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li
-                                key={i}
-                                className={`flex items-start transition-all duration-500 ${
-                                  activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                                }`}
-                                style={{
-                                  transitionDelay: activeService === index ? `${1000 + i * 100}ms` : "0ms",
-                                }}
-                              >
+                              <li key={i} className="flex items-start">
                                 <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                                   <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
@@ -342,13 +351,8 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className={`flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 ${
-                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                            }`}
-                            style={{
-                              color: servicio.color,
-                              transitionDelay: activeService === index ? "1400ms" : "0ms",
-                            }}
+                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            style={{ color: servicio.color }}
                           >
                             <span>Conoce más</span>
                             <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
@@ -390,7 +394,7 @@ export default function Servicios() {
             ))}
           </div>
 
-          {/* Pagination Dots (Mobile Only) */}
+          {/* Pagination Dots (Mobile Only) - Moved to bottom */}
           <div className="flex justify-center mt-12 md:hidden">
             {servicios.map((_, index) => (
               <button
