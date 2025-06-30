@@ -19,24 +19,29 @@ export default function Header() {
   const scrollToSection = (sectionId: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation() // Detener la propagación del evento para evitar que el overlay se cierre inmediatamente
     console.log(`[scrollToSection] Click en botón: ${sectionId}`)
-    setIsMenuOpen(false) // Iniciar el cierre del menú inmediatamente
 
-    // Pequeño retraso para permitir que el menú se cierre y el DOM se estabilice
+    // Primero, cerrar el menú
+    setIsMenuOpen(false)
+
+    // Luego, con un pequeño retraso, intentar el desplazamiento
     setTimeout(() => {
       console.log(`[scrollToSection] Intentando desplazamiento a: #${sectionId} después de timeout.`)
       try {
         const section = document.getElementById(sectionId)
         if (section) {
           console.log(`[scrollToSection] Sección encontrada: #${sectionId}. OffsetTop: ${section.offsetTop}`)
-          const headerHeight = 100 // Altura aproximada del header
-          const elementPosition = section.offsetTop
-          const offsetPosition = elementPosition - headerHeight
-
-          console.log(`[scrollToSection] Desplazando a top: ${offsetPosition}, behavior: smooth`)
-          window.scrollTo({
-            top: offsetPosition,
+          // Usar scrollIntoView para un desplazamiento más robusto
+          section.scrollIntoView({
             behavior: "smooth",
+            block: "start", // Alinea el inicio del elemento con el inicio del área visible
           })
+
+          // Ajuste manual después del scrollIntoView si el header lo cubre
+          const headerHeight = 100 // Altura aproximada del header
+          if (window.scrollY < section.offsetTop - headerHeight) {
+            window.scrollBy(0, -headerHeight) // Desplazar hacia arriba para compensar el header
+            console.log(`[scrollToSection] Ajuste de scroll por header: -${headerHeight}px`)
+          }
         } else {
           console.error(
             `[scrollToSection] ERROR: Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
