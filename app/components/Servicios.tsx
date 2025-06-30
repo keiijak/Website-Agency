@@ -104,6 +104,32 @@ export default function Servicios() {
     }
   }
 
+  // Función para renderizar el título con animación palabra por palabra
+  const renderAnimatedTitle = (titulo: string, isActive: boolean) => {
+    const palabras = titulo.split(" ")
+
+    return (
+      <h3
+        className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
+        style={{ color: "#F5F5F5" }}
+      >
+        {palabras.map((palabra, index) => (
+          <span
+            key={index}
+            className={`inline-block mr-2 transition-all duration-500 ${
+              isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{
+              transitionDelay: isActive ? `${index * 200}ms` : "0ms",
+            }}
+          >
+            {palabra}
+          </span>
+        ))}
+      </h3>
+    )
+  }
+
   return (
     <>
       <section id="servicios" ref={sectionRef} className="py-20 bg-[#1A1A1A] overflow-hidden">
@@ -188,30 +214,43 @@ export default function Servicios() {
                           )}
                         </div>
 
-                        <h3
-                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
-                          style={{ color: servicio.textColor }}
-                        >
-                          {servicio.titulo}
-                        </h3>
+                        {renderAnimatedTitle(servicio.titulo, activeService === index)}
 
                         <p
-                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
-                          style={{ color: servicio.textColor }}
+                          className={`text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed transition-all duration-700 ${
+                            activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                          }`}
+                          style={{
+                            color: servicio.textColor,
+                            transitionDelay: activeService === index ? "600ms" : "0ms",
+                          }}
                         >
                           {servicio.descripcion}
                         </p>
 
                         <div className="mb-6 md:mb-8">
                           <h4
-                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
-                            style={{ color: servicio.textColor }}
+                            className={`text-base md:text-lg font-semibold mb-3 md:mb-4 transition-all duration-500 ${
+                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                            }`}
+                            style={{
+                              color: servicio.textColor,
+                              transitionDelay: activeService === index ? "800ms" : "0ms",
+                            }}
                           >
                             Beneficios:
                           </h4>
                           <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li key={i} className="flex items-start">
+                              <li
+                                key={i}
+                                className={`flex items-start transition-all duration-500 ${
+                                  activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                                }`}
+                                style={{
+                                  transitionDelay: activeService === index ? `${1000 + i * 100}ms` : "0ms",
+                                }}
+                              >
                                 <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                                   <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
@@ -229,8 +268,13 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                            style={{ color: servicio.color }}
+                            className={`flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 ${
+                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                            }`}
+                            style={{
+                              color: servicio.color,
+                              transitionDelay: activeService === index ? "1400ms" : "0ms",
+                            }}
                           >
                             <span>Conoce más</span>
                             <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
@@ -244,30 +288,43 @@ export default function Servicios() {
                           <TrendingUp className="w-8 h-8 md:w-10 md:h-10 text-white" />
                         </div>
 
-                        <h3
-                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
-                          style={{ color: servicio.textColor }}
-                        >
-                          {servicio.titulo}
-                        </h3>
+                        {renderAnimatedTitle(servicio.titulo, activeService === index)}
 
                         <p
-                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
-                          style={{ color: servicio.textColor }}
+                          className={`text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed transition-all duration-700 ${
+                            activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                          }`}
+                          style={{
+                            color: servicio.textColor,
+                            transitionDelay: activeService === index ? "600ms" : "0ms",
+                          }}
                         >
                           {servicio.descripcion}
                         </p>
 
                         <div className="mb-6 md:mb-8">
                           <h4
-                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
-                            style={{ color: servicio.textColor }}
+                            className={`text-base md:text-lg font-semibold mb-3 md:mb-4 transition-all duration-500 ${
+                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                            }`}
+                            style={{
+                              color: servicio.textColor,
+                              transitionDelay: activeService === index ? "800ms" : "0ms",
+                            }}
                           >
                             Beneficios:
                           </h4>
                           <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li key={i} className="flex items-start">
+                              <li
+                                key={i}
+                                className={`flex items-start transition-all duration-500 ${
+                                  activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                                }`}
+                                style={{
+                                  transitionDelay: activeService === index ? `${1000 + i * 100}ms` : "0ms",
+                                }}
+                              >
                                 <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                                   <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
@@ -285,8 +342,13 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                            style={{ color: servicio.color }}
+                            className={`flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 ${
+                              activeService === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                            }`}
+                            style={{
+                              color: servicio.color,
+                              transitionDelay: activeService === index ? "1400ms" : "0ms",
+                            }}
                           >
                             <span>Conoce más</span>
                             <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
