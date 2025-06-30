@@ -18,36 +18,37 @@ export default function Header() {
   // Función mejorada para el desplazamiento a secciones
   const scrollToSection = (sectionId: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation() // Detener la propagación del evento para evitar que el overlay se cierre inmediatamente
-    console.log(`[scrollToSection] Intentando desplazarse a la sección: #${sectionId}`)
-    setIsMenuOpen(false) // Cerrar el menú inmediatamente
+    console.log(`[scrollToSection] Click en botón: ${sectionId}`)
+    setIsMenuOpen(false) // Iniciar el cierre del menú inmediatamente
 
     // Pequeño retraso para permitir que el menú se cierre y el DOM se estabilice
     setTimeout(() => {
+      console.log(`[scrollToSection] Intentando desplazamiento a: #${sectionId} después de timeout.`)
       try {
         const section = document.getElementById(sectionId)
         if (section) {
-          console.log(`[scrollToSection] Sección encontrada: #${sectionId}`)
+          console.log(`[scrollToSection] Sección encontrada: #${sectionId}. OffsetTop: ${section.offsetTop}`)
           const headerHeight = 100 // Altura aproximada del header
           const elementPosition = section.offsetTop
           const offsetPosition = elementPosition - headerHeight
 
-          console.log(`[scrollToSection] Desplazando a top: ${offsetPosition}`)
+          console.log(`[scrollToSection] Desplazando a top: ${offsetPosition}, behavior: smooth`)
           window.scrollTo({
             top: offsetPosition,
             behavior: "smooth",
           })
         } else {
           console.error(
-            `[scrollToSection] Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
+            `[scrollToSection] ERROR: Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
             Array.from(document.querySelectorAll("[id]"))
               .map((el) => `#${el.id}`)
               .join(", "),
           )
         }
       } catch (error) {
-        console.error("[scrollToSection] Error al desplazarse:", error)
+        console.error("[scrollToSection] ERROR al desplazarse:", error)
       }
-    }, 300) // Mantenemos 300ms para dar tiempo a la animación de cierre del menú
+    }, 500) // Aumentado a 500ms para dar más tiempo al cierre del menú en móvil
   }
 
   // Registrar todos los IDs disponibles en la página para depuración
@@ -55,7 +56,7 @@ export default function Header() {
     const logAvailableIds = () => {
       const elements = document.querySelectorAll("[id]")
       console.log(
-        "IDs disponibles en la página:",
+        "IDs disponibles en la página (al cargar):",
         Array.from(elements)
           .map((el) => `#${el.id}`)
           .join(", "),
