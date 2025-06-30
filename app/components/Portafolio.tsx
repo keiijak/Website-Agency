@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 
 const elementosPortafolio = [
@@ -51,14 +51,21 @@ export default function Portafolio() {
   const handleVideoLoaded = useCallback((index: number) => {
     const video = videoRefs.current[index]
     if (video) {
-      // Forzar que muestre el primer frame
-      video.currentTime = 0.1
       setVideoReady((prev) => {
         const newReady = [...prev]
         newReady[index] = true
         return newReady
       })
     }
+  }, [])
+
+  // Efecto para cargar los videos cuando el componente se monta
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (video) {
+        video.load()
+      }
+    })
   }, [])
 
   const togglePlay = useCallback(
@@ -169,9 +176,7 @@ export default function Portafolio() {
                     {/* Video Element */}
                     <video
                       ref={(el) => (videoRefs.current[index] = el)}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                        videoReady[index] ? "opacity-100" : "opacity-0"
-                      }`}
+                      className="absolute inset-0 w-full h-full object-cover"
                       loop
                       muted={mutedStates[index]}
                       playsInline
@@ -196,15 +201,6 @@ export default function Portafolio() {
                     >
                       <source src={elemento.video} type="video/mp4" />
                     </video>
-
-                    {/* Loading placeholder mientras carga el video */}
-                    {!videoReady[index] && (
-                      <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                          <Play className="w-8 h-8 text-white ml-1" />
-                        </div>
-                      </div>
-                    )}
 
                     {/* Play/Pause Overlay */}
                     <div
