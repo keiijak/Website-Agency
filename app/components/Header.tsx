@@ -20,40 +20,42 @@ export default function Header() {
     e.stopPropagation() // Detener la propagación del evento para evitar que el overlay se cierre inmediatamente
     console.log(`[scrollToSection] Click en botón: ${sectionId}`)
 
-    // Primero, cerrar el menú
+    // Primero, cerrar el menú inmediatamente
     setIsMenuOpen(false)
 
-    // Luego, con un pequeño retraso, intentar el desplazamiento
-    setTimeout(() => {
-      console.log(`[scrollToSection] Intentando desplazamiento a: #${sectionId} después de timeout.`)
-      try {
-        const section = document.getElementById(sectionId)
-        if (section) {
-          console.log(`[scrollToSection] Sección encontrada: #${sectionId}. OffsetTop: ${section.offsetTop}`)
-          // Usar scrollIntoView para un desplazamiento más robusto
-          section.scrollIntoView({
-            behavior: "smooth",
-            block: "start", // Alinea el inicio del elemento con el inicio del área visible
-          })
+    // Luego, intentar el desplazamiento sin un setTimeout, confiando en el navegador
+    // Un pequeño retraso de 50ms puede ser útil para asegurar que el DOM se actualice
+    // después de setIsMenuOpen(false), pero lo probaremos sin él primero.
+    // Si sigue sin funcionar, podemos reintroducir un setTimeout muy corto (ej. 50ms).
+    try {
+      const section = document.getElementById(sectionId)
+      if (section) {
+        console.log(`[scrollToSection] Sección encontrada: #${sectionId}. OffsetTop: ${section.offsetTop}`)
+        // Usar scrollIntoView para un desplazamiento más robusto
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start", // Alinea el inicio del elemento con el inicio del área visible
+        })
 
-          // Ajuste manual después del scrollIntoView si el header lo cubre
-          const headerHeight = 100 // Altura aproximada del header
-          if (window.scrollY < section.offsetTop - headerHeight) {
-            window.scrollBy(0, -headerHeight) // Desplazar hacia arriba para compensar el header
-            console.log(`[scrollToSection] Ajuste de scroll por header: -${headerHeight}px`)
-          }
-        } else {
-          console.error(
-            `[scrollToSection] ERROR: Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
-            Array.from(document.querySelectorAll("[id]"))
-              .map((el) => `#${el.id}`)
-              .join(", "),
-          )
+        // Ajuste manual después del scrollIntoView si el header lo cubre
+        const headerHeight = 100 // Altura aproximada del header
+        // Solo ajustar si el scrollIntoView no lo posicionó correctamente
+        // y si la sección no está ya en la parte superior de la vista
+        if (window.scrollY < section.offsetTop - headerHeight) {
+          window.scrollBy(0, -headerHeight) // Desplazar hacia arriba para compensar el header
+          console.log(`[scrollToSection] Ajuste de scroll por header: -${headerHeight}px`)
         }
-      } catch (error) {
-        console.error("[scrollToSection] ERROR al desplazarse:", error)
+      } else {
+        console.error(
+          `[scrollToSection] ERROR: Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
+          Array.from(document.querySelectorAll("[id]"))
+            .map((el) => `#${el.id}`)
+            .join(", "),
+        )
       }
-    }, 500) // Aumentado a 500ms para dar más tiempo al cierre del menú en móvil
+    } catch (error) {
+      console.error("[scrollToSection] ERROR al desplazarse:", error)
+    }
   }
 
   // Registrar todos los IDs disponibles en la página para depuración
