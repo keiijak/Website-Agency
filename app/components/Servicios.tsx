@@ -171,52 +171,49 @@ export default function Servicios() {
 
           {/* Desktop Service Navigation */}
           {!isMobile && (
-            <div className="flex justify-center mb-12 md:mb-16 px-4">
-              <div className="flex space-x-2 md:space-x-8 overflow-x-auto scrollbar-hide max-w-full">
-                {servicios.map((servicio, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollToService(index)}
-                    onMouseEnter={() => setHoveredButton(index)}
-                    onMouseLeave={() => setHoveredButton(null)}
-                    className="relative group flex-shrink-0"
+            <div className="flex justify-center mb-12 md:mb-16 space-x-4 md:space-x-8 px-4">
+              {servicios.map((servicio, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToService(index)}
+                  onMouseEnter={() => setHoveredButton(index)}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  className="relative group mt-10"
+                >
+                  {/* Número encima del botón */}
+                  <div
+                    className="absolute -top-8 md:-top-10 left-1/2 transform -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-lg md:text-xl font-bold"
+                    style={{
+                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
+                      color: "#F5F5F5",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
                   >
-                    {/* Número encima del botón */}
-                    <div
-                      className="absolute -top-6 md:-top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm md:text-xl font-bold"
-                      style={{
-                        backgroundColor:
-                          activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
-                        color: "#F5F5F5",
-                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                      }}
-                    >
-                      {index + 1}
-                    </div>
+                    {index + 1}
+                  </div>
 
+                  <div
+                    className={`px-6 py-3 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-base md:text-xl font-bold ${
+                      activeService === index || hoveredButton === index
+                        ? "scale-110 shadow-xl"
+                        : "shadow-md hover:shadow-lg"
+                    }`}
+                    style={{
+                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
+                      color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
+                    }}
+                  >
+                    <span className="hidden md:inline font-bold text-xl">{servicio.titulo}</span>
+                    <span className="md:hidden font-bold text-xl">{servicio.titulo}</span>
+                  </div>
+                  {activeService === index && (
                     <div
-                      className={`px-3 py-2 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-sm md:text-xl font-bold whitespace-nowrap ${
-                        activeService === index || hoveredButton === index
-                          ? "scale-105 md:scale-110 shadow-xl"
-                          : "shadow-md hover:shadow-lg"
-                      }`}
-                      style={{
-                        backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
-                        color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
-                        minWidth: "fit-content",
-                      }}
-                    >
-                      <span className="font-bold">{servicio.titulo}</span>
-                    </div>
-                    {activeService === index && (
-                      <div
-                        className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 rotate-45"
-                        style={{ backgroundColor: servicio.color }}
-                      ></div>
-                    )}
-                  </button>
-                ))}
-              </div>
+                      className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-8 h-8 rotate-45"
+                      style={{ backgroundColor: servicio.color }}
+                    ></div>
+                  )}
+                </button>
+              ))}
             </div>
           )}
 
@@ -248,15 +245,13 @@ export default function Servicios() {
                           )}
                         </div>
 
-                        {/* Solo mostrar título en desktop */}
-                        {!isMobile && (
-                          <h3
-                            className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
-                            style={{ color: servicio.textColor }}
-                          >
-                            {servicio.titulo}
-                          </h3>
-                        )}
+                        {/* Mostrar título en desktop */}
+                        <h3
+                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
+                          style={{ color: servicio.textColor }}
+                        >
+                          {servicio.titulo}
+                        </h3>
 
                         <p
                           className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
@@ -307,15 +302,13 @@ export default function Servicios() {
                           <TrendingUp className="w-8 h-8 md:w-10 md:h-10 text-white" />
                         </div>
 
-                        {/* Solo mostrar título en desktop */}
-                        {!isMobile && (
-                          <h3
-                            className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
-                            style={{ color: servicio.textColor }}
-                          >
-                            {servicio.titulo}
-                          </h3>
-                        )}
+                        {/* Mostrar título en desktop */}
+                        <h3
+                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
+                          style={{ color: servicio.textColor }}
+                        >
+                          {servicio.titulo}
+                        </h3>
 
                         <p
                           className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
