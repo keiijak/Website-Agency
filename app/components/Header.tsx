@@ -9,36 +9,42 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
+    console.log("Toggle menu clicked, current state:", isMenuOpen)
     setIsMenuOpen(!isMenuOpen)
   }
 
   // Función mejorada para el desplazamiento a secciones
   const scrollToSection = (sectionId: string) => {
-    console.log(`Intentando desplazarse a la sección: #${sectionId}`)
-    setIsMenuOpen(false)
+    console.log(`[scrollToSection] Intentando desplazarse a la sección: #${sectionId}`)
+    setIsMenuOpen(false) // Cerrar el menú inmediatamente
 
-    // Pequeño retraso para permitir que el menú se cierre primero
+    // Pequeño retraso para permitir que el menú se cierre y el DOM se estabilice
     setTimeout(() => {
       try {
         const section = document.getElementById(sectionId)
         if (section) {
-          console.log(`Sección encontrada: #${sectionId}`)
+          console.log(`[scrollToSection] Sección encontrada: #${sectionId}`)
+          const headerHeight = 100 // Altura aproximada del header
+          const elementPosition = section.offsetTop
+          const offsetPosition = elementPosition - headerHeight
+
+          console.log(`[scrollToSection] Desplazando a top: ${offsetPosition}`)
           window.scrollTo({
-            top: section.offsetTop - 100, // Restamos 100px para compensar la altura del header
+            top: offsetPosition,
             behavior: "smooth",
           })
         } else {
           console.error(
-            `Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
+            `[scrollToSection] Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
             Array.from(document.querySelectorAll("[id]"))
               .map((el) => `#${el.id}`)
               .join(", "),
           )
         }
       } catch (error) {
-        console.error("Error al desplazarse:", error)
+        console.error("[scrollToSection] Error al desplazarse:", error)
       }
-    }, 300)
+    }, 300) // Aumentado a 300ms para dar más tiempo al cierre del menú
   }
 
   // Registrar todos los IDs disponibles en la página para depuración
@@ -61,6 +67,11 @@ export default function Header() {
       return () => window.removeEventListener("load", logAvailableIds)
     }
   }, [])
+
+  // Debug del estado del menú
+  useEffect(() => {
+    console.log("Menu state changed:", isMenuOpen)
+  }, [isMenuOpen])
 
   return (
     <header className="bg-[#1A1A1A] shadow-md relative z-50">
@@ -86,15 +97,20 @@ export default function Header() {
         {/* Hamburger Menu Button */}
         <button
           onClick={toggleMenu}
-          className="text-[#F5F5F5] focus:outline-none p-2 relative z-20"
+          className="text-[#F5F5F5] focus:outline-none p-2 relative z-50 bg-transparent border-none cursor-pointer"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          type="button"
         >
-          <div className="relative">
+          <div className="relative w-10 h-10 md:w-12 md:h-12">
             <Menu
-              className={`w-10 h-10 md:w-12 md:h-12 transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+              className={`w-full h-full absolute top-0 left-0 transition-all duration-300 ${
+                isMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+              }`}
             />
             <X
-              className={`w-10 h-10 md:w-12 md:h-12 absolute top-0 left-0 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
+              className={`w-full h-full absolute top-0 left-0 transition-all duration-300 ${
+                isMenuOpen ? "opacity-100 rotate-0" : "opacity-0 rotate-90"
+              }`}
             />
           </div>
         </button>
@@ -102,7 +118,7 @@ export default function Header() {
 
       {/* Dropdown Menu */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-10 transition-all duration-500 ${
+        className={`fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-40 transition-all duration-500 ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsMenuOpen(false)}
