@@ -36,6 +36,7 @@ export default function Portafolio() {
   const [mutedStates, setMutedStates] = useState<boolean[]>(elementosPortafolio.map(() => true))
   const [progress, setProgress] = useState<number[]>(elementosPortafolio.map(() => 0))
   const [videoErrors, setVideoErrors] = useState<boolean[]>(elementosPortafolio.map(() => false))
+  const [videoReady, setVideoReady] = useState<boolean[]>(elementosPortafolio.map(() => false))
   const videoRefs = useRef<(HTMLVideoElement | null)[]>(elementosPortafolio.map(() => null))
 
   const handleVideoError = useCallback((index: number) => {
@@ -45,6 +46,19 @@ export default function Portafolio() {
       newErrors[index] = true
       return newErrors
     })
+  }, [])
+
+  const handleVideoLoaded = useCallback((index: number) => {
+    const video = videoRefs.current[index]
+    if (video) {
+      // Forzar que muestre el primer frame
+      video.currentTime = 0.1
+      setVideoReady((prev) => {
+        const newReady = [...prev]
+        newReady[index] = true
+        return newReady
+      })
+    }
   }, [])
 
   const togglePlay = useCallback(
@@ -60,6 +74,10 @@ export default function Portafolio() {
           // Pause other videos
           if (playingVideo !== null && videoRefs.current[playingVideo]) {
             videoRefs.current[playingVideo]?.pause()
+          }
+          // Reset to beginning if needed
+          if (video.currentTime === video.duration) {
+            video.currentTime = 0
           }
           await video.play()
           setPlayingVideo(index)
@@ -131,7 +149,7 @@ export default function Portafolio() {
                       </div>
                       <h3 className="text-white font-bold text-xl mb-2">{elemento.titulo}</h3>
                       <p className="text-white text-sm opacity-80 mb-2">{elemento.vistas} visualizaciones</p>
-                      <p className="text-white text-xs opacity-60">Video de muestra</p>
+                      <p className="text-white text-xs opacity-60">Video no disponible</p>
                     </div>
                   </div>
                 ) : (
@@ -139,12 +157,15 @@ export default function Portafolio() {
                     {/* Video Element */}
                     <video
                       ref={(el) => (videoRefs.current[index] = el)}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                        videoReady[index] ? "opacity-100" : "opacity-0"
+                      }`}
                       loop
                       muted={mutedStates[index]}
                       playsInline
                       preload="metadata"
                       onError={() => handleVideoError(index)}
+                      onLoadedMetadata={() => handleVideoLoaded(index)}
                       onTimeUpdate={() => updateProgress(index)}
                       onPlay={() => setPlayingVideo(index)}
                       onPause={() => {
@@ -162,17 +183,16 @@ export default function Portafolio() {
                       }}
                     >
                       <source src={elemento.video} type="video/mp4" />
-                      {/* Fallback para navegadores que no soportan video */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#E50914] to-[#B81D24] flex flex-col items-center justify-center p-6">
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto">
-                            <Play className="w-8 h-8 text-[#E50914] ml-1" />
-                          </div>
-                          <h3 className="text-white font-bold text-xl mb-2">{elemento.titulo}</h3>
-                          <p className="text-white text-sm opacity-80">{elemento.vistas} visualizaciones</p>
+                    </video>
+
+                    {/* Loading placeholder mientras carga el video */}
+                    {!videoReady[index] && (
+                      <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                          <Play className="w-8 h-8 text-white ml-1" />
                         </div>
                       </div>
-                    </video>
+                    )}
 
                     {/* Play/Pause Overlay */}
                     <div
