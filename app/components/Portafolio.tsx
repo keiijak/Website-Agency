@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 
 const elementosPortafolio = [
@@ -36,24 +36,7 @@ export default function Portafolio() {
   const [mutedStates, setMutedStates] = useState<boolean[]>(elementosPortafolio.map(() => true))
   const [progress, setProgress] = useState<number[]>(elementosPortafolio.map(() => 0))
   const [videoErrors, setVideoErrors] = useState<boolean[]>(elementosPortafolio.map(() => false))
-  const [isMobile, setIsMobile] = useState(false)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>(elementosPortafolio.map(() => null))
-
-  // Detectar si es móvil
-  useEffect(() => {
-    const checkMobile = () => {
-      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
-      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
-        userAgent.toLowerCase(),
-      )
-      const isSmallScreen = window.innerWidth <= 768
-      setIsMobile(isMobileDevice || isSmallScreen)
-    }
-
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
 
   const handleVideoError = useCallback((index: number) => {
     console.log(`Video ${index} failed to load, showing placeholder`)
@@ -139,8 +122,8 @@ export default function Portafolio() {
           {elementosPortafolio.map((elemento, index) => (
             <div key={index} className="bg-black rounded-lg overflow-hidden shadow-md">
               <div className="aspect-[9/16] relative group">
-                {videoErrors[index] || isMobile ? (
-                  // Fallback cuando el video falla o en móvil
+                {videoErrors[index] ? (
+                  // Fallback cuando el video falla
                   <div className="absolute inset-0 bg-gradient-to-br from-[#E50914] to-[#B81D24] flex flex-col items-center justify-center p-6">
                     <div className="text-center">
                       <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto">
@@ -148,14 +131,12 @@ export default function Portafolio() {
                       </div>
                       <h3 className="text-white font-bold text-xl mb-2">{elemento.titulo}</h3>
                       <p className="text-white text-sm opacity-80 mb-2">{elemento.vistas} visualizaciones</p>
-                      <p className="text-white text-xs opacity-60">
-                        {isMobile ? "Toca para reproducir" : "Video de muestra"}
-                      </p>
+                      <p className="text-white text-xs opacity-60">Video de muestra</p>
                     </div>
                   </div>
                 ) : (
                   <>
-                    {/* Video Element - Solo en desktop */}
+                    {/* Video Element */}
                     <video
                       ref={(el) => (videoRefs.current[index] = el)}
                       className="absolute inset-0 w-full h-full object-cover"
@@ -193,7 +174,7 @@ export default function Portafolio() {
                       </div>
                     </video>
 
-                    {/* Play/Pause Overlay - Solo en desktop */}
+                    {/* Play/Pause Overlay */}
                     <div
                       className={`absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-opacity duration-300 ${
                         playingVideo === index ? "opacity-0" : "opacity-100 group-hover:opacity-100"
@@ -212,7 +193,7 @@ export default function Portafolio() {
                       </button>
                     </div>
 
-                    {/* Progress Bar - Solo en desktop */}
+                    {/* Progress Bar */}
                     <div
                       className="absolute bottom-0 left-0 w-full h-2 bg-black bg-opacity-50 cursor-pointer"
                       onClick={(e) => handleProgressBarClick(index, e)}
@@ -226,7 +207,7 @@ export default function Portafolio() {
                       </div>
                     </div>
 
-                    {/* Controls - Solo en desktop */}
+                    {/* Controls */}
                     <div className="absolute bottom-4 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <button
                         className="p-2 bg-black bg-opacity-70 rounded-full hover:bg-opacity-90 transition-all duration-300"
@@ -244,15 +225,6 @@ export default function Portafolio() {
                       </button>
                     </div>
                   </>
-                )}
-
-                {/* Overlay clickeable para móvil */}
-                {isMobile && (
-                  <button
-                    onClick={() => togglePlay(index)}
-                    className="absolute inset-0 w-full h-full flex items-center justify-center"
-                    aria-label="Reproducir video"
-                  />
                 )}
               </div>
 
