@@ -113,49 +113,51 @@ export default function Servicios() {
           </h2>
 
           {/* Service Navigation */}
-          <div className="flex justify-center mb-12 md:mb-16 space-x-4 md:space-x-8 px-4">
-            {servicios.map((servicio, index) => (
-              <button
-                key={index}
-                onClick={() => scrollToService(index)}
-                onMouseEnter={() => setHoveredButton(index)}
-                onMouseLeave={() => setHoveredButton(null)}
-                className="relative group mt-10"
-              >
-                {/* Número encima del botón */}
-                <div
-                  className="absolute -top-8 md:-top-10 left-1/2 transform -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-lg md:text-xl font-bold"
-                  style={{
-                    backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
-                    color: "#F5F5F5",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  }}
+          <div className="flex justify-center mb-12 md:mb-16 px-4">
+            <div className="flex space-x-2 md:space-x-8 overflow-x-auto scrollbar-hide max-w-full">
+              {servicios.map((servicio, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToService(index)}
+                  onMouseEnter={() => setHoveredButton(index)}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  className="relative group flex-shrink-0"
                 >
-                  {index + 1}
-                </div>
-
-                <div
-                  className={`px-6 py-3 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-base md:text-xl font-bold ${
-                    activeService === index || hoveredButton === index
-                      ? "scale-110 shadow-xl"
-                      : "shadow-md hover:shadow-lg"
-                  }`}
-                  style={{
-                    backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
-                    color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
-                  }}
-                >
-                  <span className="hidden md:inline font-bold text-xl">{servicio.titulo}</span>
-                  <span className="md:hidden font-bold text-xl">{servicio.titulo}</span>
-                </div>
-                {activeService === index && (
+                  {/* Número encima del botón */}
                   <div
-                    className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-8 h-8 rotate-45"
-                    style={{ backgroundColor: servicio.color }}
-                  ></div>
-                )}
-              </button>
-            ))}
+                    className="absolute -top-6 md:-top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm md:text-xl font-bold"
+                    style={{
+                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "#1A1A1A",
+                      color: "#F5F5F5",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {index + 1}
+                  </div>
+
+                  <div
+                    className={`px-3 py-2 md:px-10 md:py-5 rounded-full transition-all duration-300 transform text-sm md:text-xl font-bold whitespace-nowrap ${
+                      activeService === index || hoveredButton === index
+                        ? "scale-105 md:scale-110 shadow-xl"
+                        : "shadow-md hover:shadow-lg"
+                    }`}
+                    style={{
+                      backgroundColor: activeService === index || hoveredButton === index ? servicio.color : "white",
+                      color: activeService === index || hoveredButton === index ? servicio.textColor : "#1A1A1A",
+                      minWidth: "fit-content",
+                    }}
+                  >
+                    <span className="font-bold">{servicio.titulo}</span>
+                  </div>
+                  {activeService === index && (
+                    <div
+                      className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 rotate-45"
+                      style={{ backgroundColor: servicio.color }}
+                    ></div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Services Horizontal Scroll */}
@@ -167,47 +169,58 @@ export default function Servicios() {
             {servicios.map((servicio, index) => (
               <div key={index} className="w-full flex-shrink-0 snap-center px-4" style={{ minWidth: "100%" }}>
                 <div
-                  className="rounded-3xl overflow-hidden shadow-2xl min-h-[650px] md:min-h-[550px] h-auto flex flex-col md:flex-row transform transition-all duration-500"
+                  className="rounded-3xl overflow-hidden shadow-2xl min-h-[600px] md:min-h-[550px] h-auto flex flex-col md:flex-row transform transition-all duration-500"
                   style={{
                     backgroundColor: servicio.color,
                     transform: activeService === index ? "scale(1.02)" : "scale(1)",
                   }}
                 >
                   {/* Service Content */}
-                  <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative z-10">
+                  <div className="md:w-1/2 p-6 md:p-12 flex flex-col justify-center relative z-10">
                     {index === 0 || index === 1 ? (
-                      // Contenido para Plan Estratégico y Creación de Contenido sin el círculo del icono
+                      // Contenido para Plan Estratégico y Creación de Contenido
                       <>
-                        <div className="flex items-center mb-8">
+                        <div className="flex items-center mb-6 md:mb-8">
                           {index === 0 ? (
-                            <FileText className="w-10 h-10 text-white" />
+                            <FileText className="w-8 h-8 md:w-10 md:h-10 text-white" />
                           ) : (
-                            <Video className="w-10 h-10 text-white" />
+                            <Video className="w-8 h-8 md:w-10 md:h-10 text-white" />
                           )}
                         </div>
 
                         <h3
-                          className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight"
+                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
                           style={{ color: servicio.textColor }}
                         >
                           {servicio.titulo}
                         </h3>
 
-                        <p className="text-lg md:text-xl mb-6 md:mb-8" style={{ color: servicio.textColor }}>
+                        <p
+                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
+                          style={{ color: servicio.textColor }}
+                        >
                           {servicio.descripcion}
                         </p>
 
-                        <div className="mb-8">
-                          <h4 className="text-lg font-semibold mb-4" style={{ color: servicio.textColor }}>
+                        <div className="mb-6 md:mb-8">
+                          <h4
+                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
+                            style={{ color: servicio.textColor }}
+                          >
                             Beneficios:
                           </h4>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li key={i} className="flex items-center">
-                                <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0">
-                                  <Check className="w-4 h-4" style={{ color: servicio.color }} />
+                              <li key={i} className="flex items-start">
+                                <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                                  <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
-                                <span style={{ color: servicio.textColor }}>{beneficio}</span>
+                                <span
+                                  className="text-sm md:text-base leading-relaxed"
+                                  style={{ color: servicio.textColor }}
+                                >
+                                  {beneficio}
+                                </span>
                               </li>
                             ))}
                           </ul>
@@ -216,43 +229,54 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className="flex items-center font-bold text-lg group bg-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                             style={{ color: servicio.color }}
                           >
                             <span>Conoce más</span>
-                            <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
+                            <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
                           </button>
                         </div>
                       </>
                     ) : (
-                      // Contenido para otros servicios con el círculo del icono y elementos decorativos
+                      // Contenido para Viralización
                       <>
-                        <div className="flex items-center mb-8">
-                          <TrendingUp className="w-10 h-10 text-white" />
+                        <div className="flex items-center mb-6 md:mb-8">
+                          <TrendingUp className="w-8 h-8 md:w-10 md:h-10 text-white" />
                         </div>
 
                         <h3
-                          className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight"
+                          className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight break-words"
                           style={{ color: servicio.textColor }}
                         >
                           {servicio.titulo}
                         </h3>
 
-                        <p className="text-lg md:text-xl mb-6 md:mb-8" style={{ color: servicio.textColor }}>
+                        <p
+                          className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed"
+                          style={{ color: servicio.textColor }}
+                        >
                           {servicio.descripcion}
                         </p>
 
-                        <div className="mb-8">
-                          <h4 className="text-lg font-semibold mb-4" style={{ color: servicio.textColor }}>
+                        <div className="mb-6 md:mb-8">
+                          <h4
+                            className="text-base md:text-lg font-semibold mb-3 md:mb-4"
+                            style={{ color: servicio.textColor }}
+                          >
                             Beneficios:
                           </h4>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2 md:space-y-3">
                             {servicio.beneficios.map((beneficio, i) => (
-                              <li key={i} className="flex items-center">
-                                <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0">
-                                  <Check className="w-4 h-4" style={{ color: servicio.color }} />
+                              <li key={i} className="flex items-start">
+                                <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                                  <Check className="w-3 h-3 md:w-4 md:h-4" style={{ color: servicio.color }} />
                                 </div>
-                                <span style={{ color: servicio.textColor }}>{beneficio}</span>
+                                <span
+                                  className="text-sm md:text-base leading-relaxed"
+                                  style={{ color: servicio.textColor }}
+                                >
+                                  {beneficio}
+                                </span>
                               </li>
                             ))}
                           </ul>
@@ -261,11 +285,11 @@ export default function Servicios() {
                         <div className="mt-auto">
                           <button
                             onClick={handleConoceMas}
-                            className="flex items-center font-bold text-lg group bg-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            className="flex items-center font-bold text-base md:text-lg group bg-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                             style={{ color: servicio.color }}
                           >
                             <span>Conoce más</span>
-                            <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
+                            <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
                           </button>
                         </div>
                       </>
