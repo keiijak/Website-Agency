@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -15,46 +13,31 @@ export default function Header() {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  // Función mejorada para el desplazamiento a secciones
-  const scrollToSection = (sectionId: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation() // Detener la propagación del evento para evitar que el overlay se cierre inmediatamente
-    console.log(`[scrollToSection] Click en botón: ${sectionId}`)
+  // Función simplificada para el desplazamiento a secciones
+  const scrollToSection = (sectionId: string) => {
+    console.log(`Intentando navegar a: ${sectionId}`)
 
-    // Primero, cerrar el menú inmediatamente
+    // Cerrar el menú inmediatamente
     setIsMenuOpen(false)
 
-    // Luego, intentar el desplazamiento sin un setTimeout, confiando en el navegador
-    // Un pequeño retraso de 50ms puede ser útil para asegurar que el DOM se actualice
-    // después de setIsMenuOpen(false), pero lo probaremos sin él primero.
-    // Si sigue sin funcionar, podemos reintroducir un setTimeout muy corto (ej. 50ms).
-    try {
-      const section = document.getElementById(sectionId)
-      if (section) {
-        console.log(`[scrollToSection] Sección encontrada: #${sectionId}. OffsetTop: ${section.offsetTop}`)
-        // Usar scrollIntoView para un desplazamiento más robusto
-        section.scrollIntoView({
-          behavior: "smooth",
-          block: "start", // Alinea el inicio del elemento con el inicio del área visible
-        })
+    // Buscar la sección
+    const element = document.getElementById(sectionId)
+    console.log(`Elemento encontrado:`, element)
 
-        // Ajuste manual después del scrollIntoView si el header lo cubre
-        const headerHeight = 100 // Altura aproximada del header
-        // Solo ajustar si el scrollIntoView no lo posicionó correctamente
-        // y si la sección no está ya en la parte superior de la vista
-        if (window.scrollY < section.offsetTop - headerHeight) {
-          window.scrollBy(0, -headerHeight) // Desplazar hacia arriba para compensar el header
-          console.log(`[scrollToSection] Ajuste de scroll por header: -${headerHeight}px`)
-        }
-      } else {
-        console.error(
-          `[scrollToSection] ERROR: Elemento con ID "${sectionId}" no encontrado. IDs disponibles:`,
-          Array.from(document.querySelectorAll("[id]"))
-            .map((el) => `#${el.id}`)
-            .join(", "),
-        )
-      }
-    } catch (error) {
-      console.error("[scrollToSection] ERROR al desplazarse:", error)
+    if (element) {
+      // Usar un método más simple y confiable
+      const headerOffset = 80
+      const elementPosition = element.offsetTop
+      const offsetPosition = elementPosition - headerOffset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      })
+
+      console.log(`Desplazándose a posición: ${offsetPosition}`)
+    } else {
+      console.error(`No se encontró el elemento con ID: ${sectionId}`)
     }
   }
 
@@ -144,7 +127,7 @@ export default function Header() {
             <ul className="space-y-8">
               <li className="overflow-hidden">
                 <button
-                  onClick={(e) => scrollToSection("servicios", e)}
+                  onClick={() => scrollToSection("servicios")}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -158,7 +141,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={(e) => scrollToSection("resultados", e)}
+                  onClick={() => scrollToSection("resultados")}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -172,7 +155,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={(e) => scrollToSection("testimonios", e)}
+                  onClick={() => scrollToSection("testimonios")}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -186,7 +169,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={(e) => scrollToSection("portafolio", e)}
+                  onClick={() => scrollToSection("portafolio")}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -200,7 +183,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden">
                 <button
-                  onClick={(e) => scrollToSection("clientes", e)}
+                  onClick={() => scrollToSection("clientes")}
                   className={`text-[#F5F5F5] hover:text-[#E50914] text-3xl font-bold w-full text-left py-2 transition-all duration-500 transform ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
@@ -214,7 +197,7 @@ export default function Header() {
               </li>
               <li className="overflow-hidden mt-12">
                 <button
-                  onClick={(e) => scrollToSection("reservar-llamada", e)}
+                  onClick={() => scrollToSection("reservar-llamada")}
                   className={`bg-[#E50914] text-[#F5F5F5] px-8 py-4 rounded-full hover:bg-[#B81D24] text-xl font-bold w-full text-center transition-all duration-500 transform hover:scale-105 shadow-lg ${
                     isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
                   }`}
