@@ -128,7 +128,7 @@ export default function Servicios() {
 
   return (
     <>
-      <section id="servicios" ref={sectionRef} className="py-20 bg-[#1A1A1A] overflow-hidden">
+      <section id="servicios" className="py-20 bg-[#1A1A1A] overflow-hidden">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-7xl lg:text-8xl font-extrabold text-center mb-12 md:mb-20 text-[#F5F5F5] tracking-tight leading-tight px-4">
             Servicio de Marca Personal
